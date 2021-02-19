@@ -8,5 +8,5 @@ void kernel_main(void) {
 	terminal_initialize();
 	printf("Hello, World!\n");
 	printf("\tWelcome to the kernel!\n");
-	printf("\tKernel loaded at %x-%x\n", _kernel_start, _kernel_end);
+	printf("\tKernel loaded at [%x, %x]\n", _kernel_start, _kernel_end);
 }
