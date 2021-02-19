@@ -10,7 +10,7 @@
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
-static uint16_t *const VGA_MEMORY = (uint16_t *)0xB8000;
+static uint16_t *const VGA_MEMORY = (uint16_t *)0xC03FF000;
 
 static const uint16_t REG_SCREEN_CTRL = 0x3D4;
 static const uint16_t REG_SCREEN_DATA = 0x3D5;
@@ -74,20 +74,20 @@ void terminal_clear(void) {
 void terminal_putchar(char c) {
   unsigned char uc = c;
   switch (uc) {
-  case '\n': {  // newline
-    terminal_column = 0;
-    terminal_row++;
-    break;
-  }
-  case '\t': {  // tabs
-    terminal_column += 4;
-    break;
-  }
-  default: {
-    terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
-    terminal_column++;
-    break;
-  }
+    case '\n': {  // newline
+        terminal_column = 0;
+        terminal_row++;
+        break;
+    }
+    case '\t': {  // tabs
+        terminal_column += 4;
+        break;
+    }
+    default: {
+        terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
+        terminal_column++;
+        break;
+    }
   }
 
   // Scrolling
@@ -98,8 +98,8 @@ void terminal_putchar(char c) {
 
   if (terminal_row == VGA_HEIGHT) {
     for (size_t i = 1; i < VGA_HEIGHT; i++) {
-      memcpy((char *)(terminal_buffer + offset(0, i - 1)),
-             (char *)(terminal_buffer + offset(0, i)), VGA_WIDTH * 2);
+      memcpy(terminal_buffer + offset(0, i - 1),
+             terminal_buffer + offset(0, i), VGA_WIDTH * 2);
     }
     for (size_t i = 0; i < VGA_WIDTH; i++) {
         terminal_putentryat(' ', terminal_color, i, VGA_HEIGHT-1);
