@@ -48,7 +48,6 @@ _start:
     jge 3f
 
     # mapy phy address as "present, writable".
-    # TODO: map .text and .rodata as non-writable
     movl %esi, %edx
     orl $0x003, %edx
     movl %edx, (%edi)

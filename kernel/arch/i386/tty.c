@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 
 #include <kernel/tty.h>
@@ -42,7 +41,7 @@ void update_cursor(size_t x, size_t y) {
 void terminal_initialize(void) {
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_DARK_GREY);
+  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
   terminal_buffer = VGA_MEMORY;
   for (size_t x = 0; x < VGA_WIDTH; x++) {
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
@@ -120,3 +119,24 @@ void terminal_writestring(const char *data) {
   terminal_write(data, strlen(data));
 }
 
+void terminal_writestring_color(const char *data, msg_type t) {
+    uint8_t color_res = terminal_color;
+    switch (t) {
+        case INFO:
+            terminal_setcolor(vga_entry_color(VGA_COLOR_BLUE, VGA_COLOR_BLACK));
+            break;
+        case SUCCESS:
+            terminal_setcolor(vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLACK));
+            break;
+        case WARNING:
+            terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK));
+            break;
+        case FAILURE:
+            terminal_setcolor(vga_entry_color(VGA_COLOR_RED, VGA_COLOR_BLACK));
+            break;
+        default:
+            break;
+    }
+    terminal_write(data, strlen(data));
+    terminal_setcolor(color_res);
+}
