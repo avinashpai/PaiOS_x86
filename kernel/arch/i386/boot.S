@@ -104,3 +104,16 @@ _start:
 	cli
 1:	hlt
 	jmp 1b
+
+.global gdt_flush
+.extern gp
+gdt_flush:
+    lgdt (gp)
+    mov $0x10, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+    ljmp $0x08, $flush2
+flush2:
+    ret
